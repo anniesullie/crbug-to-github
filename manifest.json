@@ -4,6 +4,7 @@
   "name": "Migrate CrBug to GitHub",
   "description": "This extension allows you to migrate the crbug on the current page to a github issue tracker.",
   "version": "1.0",
+  "options_page": "options.html",
 
   "browser_action": {
     "default_icon": "icon.png",
