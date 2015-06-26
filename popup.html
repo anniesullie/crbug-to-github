@@ -3,15 +3,24 @@
     <title>Migrate CrBug to Github</title>
     <style>
       body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
       }
       #status {
+      }
+      #error {
+        font-color: red;
+      }
+      .label-change {
+        white-space: nowrap;
       }
     </style>
     <script src="popup.js"></script>
   </head>
   <body>
-    <div id="status"></div>
-    <button id="foo">please</button>
+    <div id="result" style="display:none;"></div>
+    <div id="error" style="display;none;"></div>
+    <div id="import" style="display:none;">
+      Labels:
+      <div id="labels"></div>
+      <button id="start-import">Start Import</button>
+    </div>
 </body></html>
