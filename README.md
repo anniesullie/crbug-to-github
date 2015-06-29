@@ -32,8 +32,3 @@ In the options, set the GitHub repo username and repo name to the user and repo 
   3. The list of labels for the issue will appear. You can uncheck or modify any labels you don't want to import as-is.
   4. Click the "Start Import" button.
   5. The crbug issue is added to your GitHub ssue tracker. The issue will be created with your username and the current date, but the original issue author and date will be noted.
-
-## TODOs
-
-  * The code would be much cleaner if it used promises.
-  * Ideally set up could be made easier. Could distribute with crbug API key, but not sure about GitHub.
