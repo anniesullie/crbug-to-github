@@ -169,7 +169,7 @@ function requestGithubAccessToken(redirectUrl) {
   console.log(arguments);
   var match = redirectUrl.match(/code=([a-z\d]+)/);
   if (!match || match.length != 2) {
-    renderError('No github access code in url ' + redirectUrl);
+    renderError('No GitHub access code in url ' + redirectUrl);
     return;
   }
   var code = match[1];
@@ -177,7 +177,7 @@ function requestGithubAccessToken(redirectUrl) {
   xhr.open('POST', GITHUB_ACCESS_TOKEN_URL, true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onload = createGithubIssue;
-  xhr.onerror = renderError.bind(null, 'Error requesting Github access token');
+  xhr.onerror = renderError.bind(null, 'Error requesting GitHub access token');
   xhr.send('client_id=' + globalData.github_client_id +
            '&client_secret=' + globalData.github_client_secret +
            '&code=' + code +
@@ -205,7 +205,7 @@ function createGithubIssue(event) {
   xhr.setRequestHeader('Content-type', 'application/json');
   xhr.setRequestHeader('Authorization', 'token ' + globalData.access_token);
   xhr.onload = addGithubComment.bind(xhr, 1);
-  xhr.onerror = renderError.bind(null, 'Error creating github issue');
+  xhr.onerror = renderError.bind(null, 'Error creating GitHub issue');
   xhr.send(JSON.stringify(data));
 }
 
@@ -233,7 +233,7 @@ function addGithubComment(commentNumber) {
   xhr.setRequestHeader('Content-type', 'application/json');
   xhr.setRequestHeader('Authorization', 'token ' + globalData.access_token);
   xhr.onload = addGithubComment.bind(xhr, commentNumber + 1);
-  xhr.onerror = renderError.bind(null, 'Error creating github comment');
+  xhr.onerror = renderError.bind(null, 'Error creating GitHub comment');
   xhr.send(JSON.stringify(data));
 }
 
