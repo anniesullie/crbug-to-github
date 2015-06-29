@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Migrate CrBug to Github</title>
+    <style>
+      body {
+      }
+      #status {
+      }
+      #error {
+        font-color: red;
+      }
+      .label-change {
+        white-space: nowrap;
+      }
+    </style>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <div id="crbug_ui">
+      <div id="result" style="display:none;"></div>
+      <div id="error" style="display;none;"></div>
+      <div id="import" style="display:none;">
+        Labels:
+        <div id="labels"></div>
+        <button id="start-import">Start Import</button>
+      </div>
+    </div>
+    <div id="options_ui">
+      No options set. <a href="#" id="options_link">Click here to set up.</a>
+    </div>
+</body></html>
