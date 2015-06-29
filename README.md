@@ -34,5 +34,5 @@ In the options, set the GitHub repo username and repo name to the user and repo 
 
 ## TODOs
 
-  * The extension button should be disabled on non-crbug pages.
   * The code would be much cleaner if it used promises.
+  * Ideally set up could be made easier. Could distribute with crbug API key, but not sure about GitHub.
