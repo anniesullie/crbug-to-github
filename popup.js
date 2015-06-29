@@ -1,9 +1,3 @@
-var CRBUG_API_KEY = 'AIzaSyDrEBALf59D7TkOuz-bBuOnN2OqzD70NCQ'; // TODO(anniesullie): move to settings.
-var GITHUB_CLIENT_ID = 'a0e51932464d63e1ec27'; // TODO(anniesullie): move to settings.
-var GITHUB_SECRET = 'aa2bd4dc5dfad3836c21337952f22bb96d78b0da'; // TODO(anniesullie): move to settings.
-var GITHUB_REPO_USER = 'anniesullie'; // TODO(anniesullie): move to settings.
-var GITHUB_REPO = 'testing_repo'; // TODO(anniesullie): move to settings.
-
 var ISSUES_GET_URL = 'https://www.googleapis.com/projecthosting/v2/projects/' +
                      'chromium/issues/${issue_id}?key=${crbug_api_key}';
 var ISSUES_GET_COMMENTS_URL = 'https://www.googleapis.com/projecthosting/v2/' +
@@ -50,7 +44,30 @@ function renderError(msg) {
 
 function onImportDialogOpened() {
   globalData = {};
-  getCurrentTabUrl(requestCrbugIssueData);
+  chrome.storage.sync.get({
+    repo_user: '',
+    repo: '',
+    crbug_api_key: '',
+    github_client_id: '',
+    github_client_secret: ''
+  }, function(items) {
+    if (items.repo_user) {
+      document.getElementById('crbug_ui').style.display = '';
+      document.getElementById('options_ui').style.display = 'none';
+      globalData.repo_user = items.repo_user;
+      globalData.repo = items.repo;
+      globalData.crbug_api_key = items.crbug_api_key;
+      globalData.github_client_id = items.github_client_id;
+      globalData.github_client_secret = items.github_client_secret;
+      getCurrentTabUrl(requestCrbugIssueData);
+    } else {
+      document.getElementById('crbug_ui').style.display = 'none';
+      document.getElementById('options_ui').style.display = '';
+      document.getElementById('options_link').addEventListener('click', function() {
+        chrome.runtime.openOptionsPage();
+      })
+    }
+  });
 }
 
 function requestCrbugIssueData(url) {
@@ -67,7 +84,7 @@ function requestCrbugIssueData(url) {
   globalData.crbugId = result[1];
 
   var issueUrl = ISSUES_GET_URL.replace('${issue_id}', globalData.crbugId).
-                                replace('${crbug_api_key}', CRBUG_API_KEY);
+                                replace('${crbug_api_key}', globalData.crbug_api_key);
   var xhr = new XMLHttpRequest();
   xhr.open('GET', issueUrl, true);
   xhr.onload = handleCrbugIssueData;
@@ -83,7 +100,7 @@ function handleCrbugIssueData() {
 function requestCrbugIssueComments() {
   var issueCommentsUrl = ISSUES_GET_COMMENTS_URL.
       replace('${issue_id}', globalData.crbugId).
-      replace('${crbug_api_key}', CRBUG_API_KEY);
+      replace('${crbug_api_key}', globalData.crbug_api_key);
   var xhr = new XMLHttpRequest();
   xhr.open('GET', issueCommentsUrl, true);
   xhr.onload = handleCrbugIssueCommentData;
@@ -142,7 +159,7 @@ function onImportButtonClicked() {
 function requestGithubAccess() {
   var state = 'current_state'; // TODO(sullivan): This should be random.
   chrome.identity.launchWebAuthFlow({
-    'url': GITHUB_ACCESS_URL.replace('${github_client_id}', GITHUB_CLIENT_ID).
+    'url': GITHUB_ACCESS_URL.replace('${github_client_id}', globalData.github_client_id).
                              replace('${github_state}', state),
     'interactive': true
   }, requestGithubAccessToken);
@@ -161,8 +178,8 @@ function requestGithubAccessToken(redirectUrl) {
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onload = createGithubIssue;
   xhr.onerror = renderError.bind(null, 'Error requesting Github access token');
-  xhr.send('client_id=' + GITHUB_CLIENT_ID +
-           '&client_secret=' + GITHUB_SECRET +
+  xhr.send('client_id=' + globalData.github_client_id +
+           '&client_secret=' + globalData.github_client_secret +
            '&code=' + code +
            '&state=' + 'current_state'); // TODO(sullivan): Should be random from above.
 
@@ -182,8 +199,8 @@ function createGithubIssue(event) {
       'labels': globalData.newLabels
   };
   var xhr = new XMLHttpRequest();
-  var issueUrl = GITHUB_ISSUE_URI.replace('${user}', GITHUB_REPO_USER).
-                                  replace('${repo}', GITHUB_REPO);
+  var issueUrl = GITHUB_ISSUE_URI.replace('${user}', globalData.repo_user).
+                                  replace('${repo}', globalData.repo);
   xhr.open('POST', issueUrl, true);
   xhr.setRequestHeader('Content-type', 'application/json');
   xhr.setRequestHeader('Authorization', 'token ' + globalData.access_token);
@@ -209,8 +226,8 @@ function addGithubComment(commentNumber) {
       replace('${body}', commentData.content)};
   var xhr = new XMLHttpRequest();
   var commentUrl = GITHUB_COMMENT_URI.
-      replace('${user}', GITHUB_REPO_USER).
-      replace('${repo}', GITHUB_REPO).
+      replace('${user}', globalData.repo_user).
+      replace('${repo}', globalData.repo).
       replace('${number}', globalData.githubIssueNumber);
   xhr.open('POST', commentUrl, true);
   xhr.setRequestHeader('Content-type', 'application/json');
@@ -224,8 +241,8 @@ function linkDialogToGithubIssue() {
   var result = document.getElementById('result');
   result.style.display = '';
   result.innerHTML = GITHUB_ISSUE_LINK.
-      replace('${user}', GITHUB_REPO_USER).
-      replace('${repo}', GITHUB_REPO).
+      replace('${user}', globalData.repo_user).
+      replace('${repo}', globalData.repo).
       replace('${number}', globalData.githubIssueNumber).
       replace('${number}', globalData.githubIssueNumber);
   document.getElementById('error').style.display = 'none';

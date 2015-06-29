@@ -1,20 +1,31 @@
 
 document.addEventListener('DOMContentLoaded', loadOptions);
 
-//TODO(anniesullie): use chrome.storage.sync "options_page": "options.html",
 function loadOptions() {
-  document.getElementById('repo_user').value = localStorage['repo_user'];
-  document.getElementById('repo').value = localStorage['repo'];
-  document.getElementById('crbug_api_key').value = localStorage['crbug_api_key'];
-  document.getElementById('github_client_id').value = localStorage['github_client_id'];
-  document.getElementById('github_client_secret').value = localStorage['github_client_secret'];
   document.getElementById('save').addEventListener('click', saveOptions);
+  chrome.storage.sync.get({
+    repo_user: '',
+    repo: '',
+    crbug_api_key: '',
+    github_client_id: '',
+    github_client_secret: ''
+  }, function(items) {
+    document.getElementById('repo_user').value = items.repo_user;
+    document.getElementById('repo').value = items.repo;
+    document.getElementById('crbug_api_key').value = items.crbug_api_key;
+    document.getElementById('github_client_id').value = items.github_client_id;
+    document.getElementById('github_client_secret').value = items.github_client_secret;
+  });
 }
 
 function saveOptions() {
-  localStorage['repo_user'] = document.getElementById('repo_user').value;
-  localStorage['repo'] = document.getElementById('repo').value;
-  localStorage['crbug_api_key'] = document.getElementById('crbug_api_key').value;
-  localStorage['github_client_id'] = document.getElementById('github_client_id').value;
-  localStorage['github_client_secret'] = document.getElementById('github_client_secret').value;
+  chrome.storage.sync.set({
+    repo_user: document.getElementById('repo_user').value,
+    repo: document.getElementById('repo').value,
+    crbug_api_key: document.getElementById('crbug_api_key').value,
+    github_client_id: document.getElementById('github_client_id').value,
+    github_client_secret: document.getElementById('github_client_secret').value
+  }, function() {
+    document.getElementById('saved_success').style.display = '';
+  });
 }
