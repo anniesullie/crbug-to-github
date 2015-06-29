@@ -2,8 +2,8 @@
 This extension allows you to navigate to a crbug page, click a button, and import the bug into a github repository.
 
 ## Setup
-You need to set up API access for both crbug and GitHub to make the extension work.
-### Crbug API setup.
+You need to set up API access for both Google Project Hosting API and GitHub to make the extension work.
+### Google Project Hosting API setup.
 Follow [these directions](https://developers.google.com/api-client-library/python/guide/aaa_apikeys#acquiring-api-keys) to create an API key, which are summarized here:
   1. Go to [Google Developers Console](https://console.developers.google.com/)
   2. Click Create project
@@ -12,7 +12,7 @@ Follow [these directions](https://developers.google.com/api-client-library/pytho
   5. Click on "Credentials" under "APIs & auth"
   6. Click "Create New Key", then "Browser Key", then "Create".
 
-The "API key" you created can be added in the extension options under "Crbug API KEY".
+The "API key" you created can be added in the extension options under "Crbug API key".
 
 ### GitHub API setup
 Use [this page](https://github.com/settings/applications/new) to register a new GitHub OAuth application.
