@@ -3,14 +3,25 @@
     <title>Migrate CrBug to GitHub</title>
     <style>
       body {
+        font-family: Arial, Helvetica;
+        font-size: 100%;
+        margin: 20px;
       }
-      #status {
+      #crbug_ui {
+        min-width: 730px;
+        min-height: 374px;
       }
       #error {
         font-color: red;
       }
       .label-change {
         white-space: nowrap;
+      }
+      #start-import {
+        margin-top: 10px;
+      }
+      strong {
+        line-height: 2.0em;
       }
     </style>
     <script src="popup.js"></script>
@@ -20,12 +31,15 @@
       <div id="result" style="display:none;"></div>
       <div id="error" style="display;none;"></div>
       <div id="import" style="display:none;">
-        Labels:
+        <strong>Labels:</strong>
         <div id="labels"></div>
         <button id="start-import">Start Import</button>
       </div>
     </div>
     <div id="options_ui">
       No options set. <a href="#" id="options_link">Click here to set up.</a>
+    </div>
+    <div id="loading_ui" style="display: none;">
+      <img src="loading.gif">
     </div>
 </body></html>

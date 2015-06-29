@@ -11,7 +11,8 @@ var GITHUB_ISSUE_URI = 'https://api.github.com/repos/${user}/${repo}/issues';
 var GITHUB_COMMENT_URI = 'https://api.github.com/repos/${user}/${repo}/' +
                          'issues/${number}/comments';
 var GITHUB_ISSUE_LINK = 'Issue created: <A HREF="https://github.com/${user}/' +
-                        '${repo}/issues/${number}" TARGET="_blank">${number}</A>';
+                        '${repo}/issues/${number}" TARGET="_blank">View issue ' +
+                        '${number}</A>';
 
 
 var ISSUE_TEMPLATE = '**Issue by [${user_name}](${user_url})**\n_${date}_\n' +
@@ -154,6 +155,8 @@ function onImportButtonClicked() {
       }
     }
   }
+  document.getElementById('crbug_ui').style.display = 'none';
+  document.getElementById('loading_ui').style.display = '';
   requestGithubAccess();
 }
 
@@ -247,4 +250,6 @@ function linkDialogToGithubIssue() {
       replace('${number}', globalData.githubIssueNumber);
   document.getElementById('error').style.display = 'none';
   document.getElementById('import').style.display = 'none';
+  document.getElementById('loading_ui').style.display = 'none';
+  document.getElementById('crbug_ui').style.display = '';
 }
