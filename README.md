@@ -2,7 +2,7 @@
 This extension allows you to navigate to a crbug page, click a button, and import the bug into a github repository.
 
 ## Setup
-You need to set up API access for both Google Project Hosting API and GitHub to make the extension work.
+You can [download](https://chrome.google.com/webstore/a/google.com/detail/migrate-crbug-to-github/hhiilahjifpaibhpbnhhhlgblambpgcn) the extension or [load it as an unpacked extension](https://developer.chrome.com/extensions/getstarted#unpacked). Then you need to set up API access for both Google Project Hosting API and GitHub to make the extension work.
 ### Google Project Hosting API setup.
 Follow [these directions](https://developers.google.com/api-client-library/python/guide/aaa_apikeys#acquiring-api-keys) to create an API key, which are summarized here:
   1. Go to [Google Developers Console](https://console.developers.google.com/)
@@ -17,7 +17,8 @@ The "API key" you created can be added in the extension options under "Crbug API
 ### GitHub API setup
 Use [this page](https://github.com/settings/applications/new) to register a new GitHub OAuth application.
   1. Set the application name, homepage url, and application description to whatever you want.
-  2. Set the Authorization callback URL to https://[CHROME EXTENSION ID HERE].chromiumapp.org/provider_cb
+  2. Get the Chrome extension ID. If you downloaded from the Chrome web store it's hhiilahjifpaibhpbnhhhlgblambpgcn; if you're running an unpacked extension it's chrome.runtime.id. 
+  3. Set the Authorization callback URL to https://[CHROME EXTENSION ID HERE].chromiumapp.org/provider_cb
 
 Copy the Client ID and GitHub Client Secret to the extension options under "GitHub Client ID" and "GitHub Client Secret".
 
