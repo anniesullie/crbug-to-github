@@ -11,7 +11,7 @@ var GITHUB_ISSUE_URI = 'https://api.github.com/repos/${user}/${repo}/issues';
 var GITHUB_COMMENT_URI = 'https://api.github.com/repos/${user}/${repo}/' +
                          'issues/${number}/comments';
 var GITHUB_ISSUE_LINK = 'Issue created: <A HREF="https://github.com/${user}/' +
-                        '${repo}/issues/${number}">${number}</A>';
+                        '${repo}/issues/${number}" TARGET="_blank">${number}</A>';
 
 
 var ISSUE_TEMPLATE = '**Issue by [${user_name}](${user_url})**\n_${date}_\n' +
@@ -59,6 +59,7 @@ function onImportDialogOpened() {
       globalData.crbug_api_key = items.crbug_api_key;
       globalData.github_client_id = items.github_client_id;
       globalData.github_client_secret = items.github_client_secret;
+      globalData.github_state = String(Math.random);
       getCurrentTabUrl(requestCrbugIssueData);
     } else {
       document.getElementById('crbug_ui').style.display = 'none';
@@ -157,10 +158,9 @@ function onImportButtonClicked() {
 }
 
 function requestGithubAccess() {
-  var state = 'current_state'; // TODO(sullivan): This should be random.
   chrome.identity.launchWebAuthFlow({
     'url': GITHUB_ACCESS_URL.replace('${github_client_id}', globalData.github_client_id).
-                             replace('${github_state}', state),
+                             replace('${github_state}', globalData.github_state),
     'interactive': true
   }, requestGithubAccessToken);
 }
@@ -181,7 +181,7 @@ function requestGithubAccessToken(redirectUrl) {
   xhr.send('client_id=' + globalData.github_client_id +
            '&client_secret=' + globalData.github_client_secret +
            '&code=' + code +
-           '&state=' + 'current_state'); // TODO(sullivan): Should be random from above.
+           '&state=' + globalData.github_state);
 
 }
 

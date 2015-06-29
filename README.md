@@ -37,4 +37,3 @@ In the options, set the GitHub repo username and repo name to the user and repo 
   * There should be a loading spinner when you click the "Start import" button.
   * The extension button should be disabled on non-crbug pages.
   * The code would be much cleaner if it used promises.
-  * The state param sent to GitHub oauth should be randomly generated and stored for the proper amount of time.
