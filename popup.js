@@ -18,7 +18,14 @@ var GITHUB_ISSUE_LINK = 'Issue created: <A HREF="https://github.com/${user}/' +
 var ISSUE_TEMPLATE = '**Issue by [${user_name}](${user_url})**\n_${date}_\n' +
                      '_Originally opened as ${url}_\n\n----\n\n${body}'
 var COMMENT_TEMPLATE = '**Comment by [${user_name}](${user_url})**\n_' +
-                       '${date}_\n\n----\n\n${body}'
+                       '${date}_\n\n----\n\n${body}';
+
+var DEFAULT_SAVED_LABELS = {
+  'Type-Feature': 'Enhancement',
+  'Type-Bug': 'Bug',
+  'Pri-1': 'P1',
+  'Pri-2': 'P2',
+}
 
 
 var globalData;
@@ -50,7 +57,8 @@ function onImportDialogOpened() {
     repo: '',
     crbug_api_key: '',
     github_client_id: '',
-    github_client_secret: ''
+    github_client_secret: '',
+    saved_labels: DEFAULT_SAVED_LABELS
   }, function(items) {
     if (items.repo_user) {
       document.getElementById('crbug_ui').style.display = '';
@@ -61,6 +69,7 @@ function onImportDialogOpened() {
       globalData.github_client_id = items.github_client_id;
       globalData.github_client_secret = items.github_client_secret;
       globalData.github_state = String(Math.random);
+      globalData.saved_labels = items.saved_labels;
       getCurrentTabUrl(requestCrbugIssueData);
     } else {
       document.getElementById('crbug_ui').style.display = 'none';
@@ -71,6 +80,7 @@ function onImportDialogOpened() {
     }
   });
 }
+
 
 function requestCrbugIssueData(url) {
   // Get bug id
@@ -134,6 +144,10 @@ function updateImportDialogUI() {
     input.type = 'text';
     input.id = 'label-update-' + i;
     input.placeholder = 'Change label';
+    var replacement = globalData.saved_labels[globalData.issueData.labels[i]];
+    if (replacement) {
+      input.value = replacement;
+    }
     container.appendChild(input);
     labels.appendChild(container);
   }
@@ -148,15 +162,23 @@ function onImportButtonClicked() {
     var checkbox = document.getElementById('label-check-' + i);
     if (checkbox.checked) {
       var input = document.getElementById('label-update-' + i);
+      var originalIssueLabel = globalData.issueData.labels[i];
       if (input.value) {
         globalData.newLabels.push(input.value);
+        globalData.saved_labels[originalIssueLabel] = input.value;
       } else {
-        globalData.newLabels.push(globalData.issueData.labels[i]);
+        globalData.newLabels.push(originalIssueLabel);
       }
     }
   }
   document.getElementById('crbug_ui').style.display = 'none';
   document.getElementById('loading_ui').style.display = '';
+  chrome.storage.sync.set({
+    saved_labels: globalData.saved_labels
+  }, function() {
+    console.debug('Saved labels:', globalData.saved_labels);
+    console.debug('Last error:', chrome.runtime.lastError);
+  });
   requestGithubAccess();
 }
 
